@@ -7,9 +7,27 @@ import os
 # Load environment variables
 load_dotenv()
 
-# API keys
-tavily_api_key = os.getenv("TAVILY_API_KEY")
-gemini_api_key = os.getenv("GEMINI_API_KEY")
+# Get Tavily API Key from Streamlit secrets or .env
+# Try secrets first, fallback to .env
+try:
+    tavily_api_key = st.secrets["TAVILY_API_KEY"]
+except Exception:
+    tavily_api_key = os.getenv("TAVILY_API_KEY")
+
+if not tavily_api_key:
+    st.error("❌ TAVILY_API_KEY not found in st.secrets or .env")
+    st.stop()
+
+# Get Gemini API Key from Streamlit secrets or .env
+# Try secrets first, fallback to .env
+try:
+    gemini_api_key = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    gemini_api_key = os.getenv("GEMINI_API_KEY")
+
+if not gemini_api_key:
+    st.error("❌ GEMINI_API_KEY not found in st.secrets or .env")
+    st.stop()
 
 # Configure Gemini
 genai.configure(api_key=gemini_api_key)
